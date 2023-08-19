@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Socket.io User Input</title>
+</head>
+<body>
+  <h1>Socket.io Implemenation</h1>
+  <input type="text" id="nameInput" placeholder="Enter your name">
+  <button id="joinButton">Join</button>
+
+  <div id="messages"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    const nameInput = document.getElementById('nameInput');
+    const joinButton = document.getElementById('joinButton');
+    const messagesDiv = document.getElementById('messages');
+
+    joinButton.addEventListener('click', () => {
+      const name = nameInput.value;
+      if (name.trim() !== '') {
+        socket.emit('join', name);
+        nameInput.value = '';
+        joinButton.disabled = true;
+      }
+    });
+
+    socket.on('userJoined', (name) => {
+      const messageElement = document.createElement('div');
+      messageElement.textContent = `${name} joined the chat.`;
+      messagesDiv.appendChild(messageElement);
+    });
+  </script>
+</body>
+</html>
